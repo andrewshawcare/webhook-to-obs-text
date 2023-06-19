@@ -2,6 +2,8 @@
 
 Use a webhook to update a file that OBS can read as text on stream.
 
+![Screenshot](./screenshot.webp)
+
 ## Getting started
 
 The application presumes you have setup a [GitHub repository webhook](https://docs.github.com/en/rest/webhooks?apiVersion=2022-11-28) already. Here are the initial settings for the webhook:
