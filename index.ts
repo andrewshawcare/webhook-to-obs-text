@@ -29,13 +29,17 @@ const url = await Ngrok.connect(configuration.port)
 
 const octokit = new Octokit({ auth: configuration.personalAccessToken });
 
-await octokit.request(`PATCH /repos/{owner}/{repo}/hooks/{hookId}/config`, {
+await octokit.request("PATCH /repos/{owner}/{repo}/hooks/{hook_id}", {
     owner: configuration.owner,
     repo: configuration.repo,
-    hookId: configuration.hookId,
+    hook_id: configuration.hookId,
     data: JSON.stringify({
-        secret: configuration.key,
-        url: url
+        active: true,
+        config: {
+            content_type: 'json',
+            secret: configuration.key,
+            url: url
+        }
     })
 });
 
@@ -66,4 +70,16 @@ fastify.post<{
     writeFile(configuration.file, issuesEvent.issue.title);
 })
 
-fastify.listen({ host: '127.0.0.1', port: configuration.port })
+fastify.listen({ host: '127.0.0.1', port: configuration.port });
+
+process.on("SIGINT", async (code) => {
+    await octokit.request("PATCH /repos/{owner}/{repo}/hooks/{hook_id}", {
+        owner: configuration.owner,
+        repo: configuration.repo,
+        hook_id: configuration.hookId,
+        data: JSON.stringify({
+            active: false
+        })
+    })
+    process.exit(0);
+});
