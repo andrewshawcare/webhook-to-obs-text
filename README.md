@@ -56,7 +56,7 @@ Environment -> webhook-to-obs-text: Provide configuration
 webhook-to-obs-text -> ngrok: Establish tunnel
 ngrok -> webhook-to-obs-text: Tunnel URL
 
-webhook-to-obs-text -> GitHub: Update webhook with Tunnel URL and key
+webhook-to-obs-text -> GitHub: Activate webhook and update with Tunnel URL and key
 
 User -> GitHub: Assign issue
 
@@ -65,6 +65,10 @@ GitHub -> ngrok -> webhook-to-obs-text: Issue assigned event
 webhook-to-obs-text -> file: Replace content with assigned issue title
 
 OBS -> file: Update text with content
+
+webhook-to-obs-text -> webhook-to-obs-text: `SIGTERM` emitted
+
+webhook-to-obs-text -> GitHub: Deactivate webhook
 ```
 
 ### Schema-driven types
